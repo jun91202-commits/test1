@@ -1,255 +1,299 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AssetFlow — 나만의 자산현황 대시보드</title>
   <meta name="description" content="개인 자산을 안전하게 관리하는 프리미엄 자산 대시보드. 100% 로컬 데이터 저장, 서버 전송 없음.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div id="app">
 
-  <!-- ============================================================
+<body>
+  <div id="app">
+
+    <!-- ============================================================
        HEADER
        ============================================================ -->
-  <header id="main-header">
-    <div class="hdr-left">
-      <div class="logo">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="url(#logo-grad)" stroke-width="2.5" stroke-linecap="round">
-          <defs><linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#38BDF8"/><stop offset="100%" stop-color="#4ADE80"/></linearGradient></defs>
-          <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
-        </svg>
-        <span class="logo-text">AssetFlow</span>
+    <header id="main-header">
+      <div class="hdr-left">
+        <div class="logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="url(#logo-grad)" stroke-width="2.5"
+            stroke-linecap="round">
+            <defs>
+              <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38BDF8" />
+                <stop offset="100%" stop-color="#4ADE80" />
+              </linearGradient>
+            </defs>
+            <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2" />
+          </svg>
+          <span class="logo-text">AssetFlow</span>
+        </div>
+        <span class="hdr-date" id="header-date"></span>
       </div>
-      <span class="hdr-date" id="header-date"></span>
-    </div>
-    <div class="hdr-right">
-      <!-- Privacy Eye Toggle -->
-      <button id="privacy-toggle" class="icon-btn" title="민감 정보 숨기기 / 보이기">
-        <svg id="privacy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-        </svg>
-      </button>
-      <!-- Export Backup -->
-      <button id="export-btn" class="icon-btn" title="백업 파일 내보내기 (JSON)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-      </button>
-      <!-- Import File -->
-      <label class="icon-btn" title="CSV / JSON 파일 불러오기">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-        <input type="file" id="import-file" accept=".csv,.json">
-      </label>
-      <!-- Rebalancing Feed Bell -->
-      <button id="feed-toggle-btn" class="icon-btn feed-bell-btn" title="리밸런싱 피드 열기">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-        </svg>
-        <span id="alert-badge" class="badge hidden">0</span>
-      </button>
-    </div>
-  </header>
+      <div class="hdr-right">
+        <!-- Privacy Eye Toggle -->
+        <button id="privacy-toggle" class="icon-btn" title="민감 정보 숨기기 / 보이기">
+          <svg id="privacy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </button>
+        <!-- Export Backup -->
+        <button id="export-btn" class="icon-btn" title="백업 파일 내보내기 (JSON)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+        </button>
+        <!-- Import File -->
+        <label class="icon-btn" title="CSV / JSON 파일 불러오기">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <input type="file" id="import-file" accept=".csv,.json">
+        </label>
+        <!-- Rebalancing Feed Bell -->
+        <button id="feed-toggle-btn" class="icon-btn feed-bell-btn" title="리밸런싱 피드 열기">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span id="alert-badge" class="badge hidden">0</span>
+        </button>
+      </div>
+    </header>
 
-  <!-- ============================================================
+    <!-- ============================================================
        ONBOARDING SCREEN
        ============================================================ -->
-  <div id="screen-onboarding" class="screen">
-    <div class="onboarding-wrapper">
-      <div class="onboarding-card glass-card">
+    <div id="screen-onboarding" class="screen">
+      <div class="onboarding-wrapper">
+        <div class="onboarding-card glass-card">
 
-        <!-- Dropzone -->
-        <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="파일 드롭 영역">
-          <div class="dropzone-icon">🗂️</div>
-          <h2 class="dropzone-title">
-            구글 스프레드시트 파일(CSV)이나 백업 파일(JSON)을<br>이 가방에 드래그해서 넣어주세요!
-          </h2>
-          <p class="dropzone-sub">또는 클릭하여 파일을 선택하세요</p>
-          <input type="file" id="dropzone-file" accept=".csv,.json" aria-hidden="true">
-        </div>
+          <!-- Dropzone -->
+          <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="파일 드롭 영역">
+            <div class="dropzone-icon">🗂️</div>
+            <h2 class="dropzone-title">
+              구글 스프레드시트 파일(CSV)이나 백업 파일(JSON)을<br>이 가방에 드래그해서 넣어주세요!
+            </h2>
+            <p class="dropzone-sub">또는 클릭하여 파일을 선택하세요</p>
+            <input type="file" id="dropzone-file" accept=".csv,.json" aria-hidden="true">
+          </div>
 
-        <p class="onb-guide-text">처음 방문하셨나요? 아래 가이드라인을 따라 1분 만에 나만의 자산 대시보드를 만들어보세요.</p>
+          <p class="onb-guide-text">처음 방문하셨나요? 아래 가이드라인을 따라 1분 만에 나만의 자산 대시보드를 만들어보세요.</p>
 
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-          <button id="btn-template" class="btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-            구글 스프레드시트 양식 다운로드
-          </button>
-          <button id="btn-sample" class="btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            샘플 데이터로 체험하기
-          </button>
-        </div>
+          <!-- Quick Actions -->
+          <div class="quick-actions">
+            <button id="btn-template" class="btn-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+              구글 스프레드시트 양식 다운로드
+            </button>
+            <button id="btn-sample" class="btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg>
+              샘플 데이터로 체험하기
+            </button>
+          </div>
 
-        <!-- Feature Guides -->
-        <div class="feature-guides">
-          <div class="feature-item">
-            <span class="fi-icon fi-blue">📊</span>
-            <div class="fi-body">
-              <strong>요약 카드 & 도넛 차트</strong>
-              <p>총 자산, 순자산, 부채비율을 한눈에 확인하고 자산군별 구성을 시각화합니다.</p>
+          <!-- Feature Guides -->
+          <div class="feature-guides">
+            <div class="feature-item">
+              <span class="fi-icon fi-blue">📊</span>
+              <div class="fi-body">
+                <strong>요약 카드 & 도넛 차트</strong>
+                <p>총 자산, 순자산, 부채비율을 한눈에 확인하고 자산군별 구성을 시각화합니다.</p>
+              </div>
             </div>
-          </div>
-          <div class="feature-item">
-            <span class="fi-icon fi-green">🔔</span>
-            <div class="fi-body">
-              <strong>글래스 리밸런싱 피드 (Type C)</strong>
-              <p>자산군 목표 배분 초과/부족 알림과 개별 종목 비중 경고를 실시간으로 제공합니다.</p>
+            <div class="feature-item">
+              <span class="fi-icon fi-green">🔔</span>
+              <div class="fi-body">
+                <strong>리밸런싱 피드 </strong>
+                <p>자산군 목표 배분 초과/부족 알림과 개별 종목 비중 경고를 실시간으로 제공합니다.</p>
+              </div>
             </div>
-          </div>
-          <div class="feature-item">
-            <span class="fi-icon fi-orange">✏️</span>
-            <div class="fi-body">
-              <strong>인라인 에디팅 통합 테이블</strong>
-              <p>셀을 더블클릭하면 현재가와 메모를 즉시 수정할 수 있습니다. 스마트 필터 칩으로 원하는 데이터만 조회합니다.</p>
+            <div class="feature-item">
+              <span class="fi-icon fi-orange">✏️</span>
+              <div class="fi-body">
+                <strong>인라인 에디팅 통합 테이블</strong>
+                <p>셀을 더블클릭하면 현재가와 메모를 즉시 수정할 수 있습니다. 스마트 필터 칩으로 원하는 데이터만 조회합니다.</p>
+              </div>
             </div>
-          </div>
-          <div class="feature-item">
-            <span class="fi-icon fi-purple">📈</span>
-            <div class="fi-body">
-              <strong>누적 영역 & 월별 막대 차트</strong>
-              <p>자산 성장 추이를 누적 영역 차트로, 월별 비교는 그룹 막대 차트로 전환하여 확인합니다.</p>
+            <div class="feature-item">
+              <span class="fi-icon fi-purple">📈</span>
+              <div class="fi-body">
+                <strong>누적 영역 & 월별 막대 차트</strong>
+                <p>자산 성장 추이를 누적 영역 차트로, 월별 비교는 그룹 막대 차트로 전환하여 확인합니다.</p>
+              </div>
             </div>
-          </div>
-          <div class="feature-item">
-            <span class="fi-icon fi-green">🔐</span>
-            <div class="fi-body">
-              <strong>로컬 프라이버시 스토리지</strong>
-              <p>모든 데이터는 브라우저 로컬 스토리지에만 저장됩니다. 서버로 단 1바이트도 전송되지 않습니다.</p>
+            <div class="feature-item">
+              <span class="fi-icon fi-green">🔐</span>
+              <div class="fi-body">
+                <strong>로컬 프라이버시 스토리지</strong>
+                <p>모든 데이터는 브라우저 로컬 스토리지에만 저장됩니다. 서버로 단 1바이트도 전송되지 않습니다.</p>
+              </div>
             </div>
-          </div>
-          <div class="feature-item">
-            <span class="fi-icon fi-blue">💾</span>
-            <div class="fi-body">
-              <strong>백업 & 복원</strong>
-              <p>JSON 백업 파일로 전체 히스토리를 내보내고, 언제든지 다시 불러와 복원할 수 있습니다.</p>
+            <div class="feature-item">
+              <span class="fi-icon fi-blue">💾</span>
+              <div class="fi-body">
+                <strong>백업 & 복원</strong>
+                <p>JSON 백업 파일로 전체 히스토리를 내보내고, 언제든지 다시 불러와 복원할 수 있습니다.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ============================================================
+    <!-- ============================================================
        DASHBOARD SCREEN
        ============================================================ -->
-  <div id="screen-dashboard" class="screen hidden">
+    <div id="screen-dashboard" class="screen hidden">
 
-    <!-- ── Row 1: Summary Cards + Donut Chart ── -->
-    <div class="summary-row">
-      <div class="summary-cards">
-        <div class="glass-card s-card" id="card-total">
-          <span class="s-label">총 자산</span>
-          <div class="s-value sensitive-value" id="val-total">-</div>
-          <div class="s-sub" id="sub-total"></div>
-        </div>
-        <div class="glass-card s-card" id="card-networth">
-          <span class="s-label">순 자산</span>
-          <div class="s-value sensitive-value" id="val-networth">-</div>
-          <div class="s-sub" id="sub-networth"></div>
-        </div>
-        <div class="glass-card s-card" id="card-debt">
-          <span class="s-label">부채 비율</span>
-          <div class="s-value" id="val-debt">-</div>
-          <div class="s-sub" id="sub-debt"></div>
-        </div>
-      </div>
-
-      <div class="glass-card donut-card">
-        <h3 class="section-title">자산 구성</h3>
-        <div class="donut-wrap">
-          <div class="donut-canvas-wrap">
-            <canvas id="donut-chart"></canvas>
+      <!-- ── Row 1: Summary Cards + Donut Chart ── -->
+      <div class="summary-row">
+        <div class="summary-cards">
+          <div class="glass-card s-card" id="card-total">
+            <span class="s-label">총 자산</span>
+            <div class="s-value sensitive-value" id="val-total">-</div>
+            <div class="s-sub" id="sub-total"></div>
           </div>
-          <div class="donut-legend" id="donut-legend"></div>
+          <div class="glass-card s-card" id="card-networth">
+            <span class="s-label">순 자산</span>
+            <div class="s-value sensitive-value" id="val-networth">-</div>
+            <div class="s-sub" id="sub-networth"></div>
+          </div>
+          <div class="glass-card s-card" id="card-debt">
+            <span class="s-label">부채 비율</span>
+            <div class="s-value" id="val-debt">-</div>
+            <div class="s-sub" id="sub-debt"></div>
+          </div>
+        </div>
+
+        <div class="glass-card donut-card">
+          <h3 class="section-title">자산 구성</h3>
+          <div class="donut-wrap">
+            <div class="donut-canvas-wrap">
+              <canvas id="donut-chart"></canvas>
+            </div>
+            <div class="donut-legend" id="donut-legend"></div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- ── Row 2: History Chart ── -->
-    <div class="glass-card history-card">
-      <div class="history-hdr">
-        <h3 class="section-title">자산 추이</h3>
-        <div class="toggle-group">
-          <button id="btn-chart-area" class="toggle-btn active" title="누적 영역 차트">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            누적 영역
-          </button>
-          <button id="btn-chart-bar" class="toggle-btn" title="월별 막대 차트">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
-            월별 막대
-          </button>
+      <!-- ── Row 2: History Chart ── -->
+      <div class="glass-card history-card">
+        <div class="history-hdr">
+          <h3 class="section-title">자산 추이</h3>
+          <div class="toggle-group">
+            <button id="btn-chart-area" class="toggle-btn active" title="누적 영역 차트">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+              누적 영역
+            </button>
+            <button id="btn-chart-bar" class="toggle-btn" title="월별 막대 차트">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+                <line x1="2" y1="20" x2="22" y2="20" />
+              </svg>
+              월별 막대
+            </button>
+          </div>
+        </div>
+        <div class="history-canvas-wrap">
+          <canvas id="history-chart"></canvas>
         </div>
       </div>
-      <div class="history-canvas-wrap">
-        <canvas id="history-chart"></canvas>
-      </div>
-    </div>
 
-    <!-- ── Row 3: Filter Chips + Master Table ── -->
-    <div class="glass-card table-card">
-      <div class="table-hdr-row">
-        <h3 class="section-title">자산 목록</h3>
-        <div class="filter-chips" id="filter-chips" role="group" aria-label="자산 필터">
-          <button class="chip active" data-filter="all">전체</button>
-          <button class="chip" data-filter="stock">주식만</button>
-          <button class="chip" data-filter="loss">손실 자산</button>
-          <button class="chip" data-filter="rebalance">리밸런싱 필요</button>
+      <!-- ── Row 3: Filter Chips + Master Table ── -->
+      <div class="glass-card table-card">
+        <div class="table-hdr-row">
+          <h3 class="section-title">자산 목록</h3>
+          <div class="filter-chips" id="filter-chips" role="group" aria-label="자산 필터">
+            <button class="chip active" data-filter="all">전체</button>
+            <button class="chip" data-filter="stock">주식만</button>
+            <button class="chip" data-filter="loss">손실 자산</button>
+            <button class="chip" data-filter="rebalance">리밸런싱 필요</button>
+          </div>
         </div>
+        <div class="table-scroll">
+          <table id="asset-table" role="table">
+            <thead>
+              <tr>
+                <th class="sortable" data-col="자산구분">자산구분</th>
+                <th class="sortable" data-col="자산명">자산명</th>
+                <th data-col="종목코드">종목코드</th>
+                <th class="sortable num-col" data-col="수량">수량</th>
+                <th class="sortable num-col" data-col="매입단가">매입단가</th>
+                <th class="sortable num-col edit-hint" data-col="현재가">현재가 ✎</th>
+                <th class="sortable num-col" data-col="평가금액">평가금액</th>
+                <th class="sortable num-col" data-col="수익률">수익률</th>
+                <th class="num-col" data-col="비중">비중</th>
+                <th class="edit-hint" data-col="메모">메모 ✎</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+        <p class="table-hint">💡 <strong>현재가</strong>와 <strong>메모</strong> 셀을 더블클릭하면 인라인으로 즉시 수정할 수 있습니다.</p>
       </div>
-      <div class="table-scroll">
-        <table id="asset-table" role="table">
-          <thead>
-            <tr>
-              <th class="sortable" data-col="자산구분">자산구분</th>
-              <th class="sortable" data-col="자산명">자산명</th>
-              <th data-col="종목코드">종목코드</th>
-              <th class="sortable num-col" data-col="수량">수량</th>
-              <th class="sortable num-col" data-col="매입단가">매입단가</th>
-              <th class="sortable num-col edit-hint" data-col="현재가">현재가 ✎</th>
-              <th class="sortable num-col" data-col="평가금액">평가금액</th>
-              <th class="sortable num-col" data-col="수익률">수익률</th>
-              <th class="num-col" data-col="비중">비중</th>
-              <th class="edit-hint" data-col="메모">메모 ✎</th>
-            </tr>
-          </thead>
-          <tbody id="table-body"></tbody>
-        </table>
-      </div>
-      <p class="table-hint">💡 <strong>현재가</strong>와 <strong>메모</strong> 셀을 더블클릭하면 인라인으로 즉시 수정할 수 있습니다.</p>
-    </div>
 
-  </div><!-- /#screen-dashboard -->
+    </div><!-- /#screen-dashboard -->
 
-  <!-- ============================================================
+    <!-- ============================================================
        REBALANCING FEED PANEL (Slide-in from right)
        ============================================================ -->
-  <aside id="feed-panel" class="feed-panel" aria-label="리밸런싱 피드">
-    <div class="feed-hdr">
-      <h3>리밸런싱 피드</h3>
-      <button id="feed-close-btn" class="icon-btn" aria-label="피드 닫기">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="feed-tabs" role="tablist">
-      <button class="feed-tab active" data-tab="macro" role="tab" aria-selected="true">🏛 자산군 조정</button>
-      <button class="feed-tab" data-tab="micro" role="tab" aria-selected="false">📌 개별 종목</button>
-    </div>
-    <div id="feed-content" class="feed-content" role="tabpanel"></div>
-  </aside>
+    <aside id="feed-panel" class="feed-panel" aria-label="리밸런싱 피드">
+      <div class="feed-hdr">
+        <h3>리밸런싱 피드</h3>
+        <button id="feed-close-btn" class="icon-btn" aria-label="피드 닫기">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="feed-tabs" role="tablist">
+        <button class="feed-tab active" data-tab="macro" role="tab" aria-selected="true">🏛 자산군 조정</button>
+        <button class="feed-tab" data-tab="micro" role="tab" aria-selected="false">📌 개별 종목</button>
+      </div>
+      <div id="feed-content" class="feed-content" role="tabpanel"></div>
+    </aside>
 
-  <!-- Overlay (dims background when feed is open) -->
-  <div id="overlay" class="overlay hidden" aria-hidden="true"></div>
+    <!-- Overlay (dims background when feed is open) -->
+    <div id="overlay" class="overlay hidden" aria-hidden="true"></div>
 
-</div><!-- /#app -->
+  </div><!-- /#app -->
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
 </body>
+
 </html>
