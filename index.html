@@ -19,6 +19,7 @@
        HEADER
        ============================================================ -->
     <header id="main-header">
+      <!-- 1. 헤더 왼쪽 (로고 & 날짜) -->
       <div class="hdr-left">
         <div class="logo">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="url(#logo-grad)" stroke-width="2.5"
@@ -34,51 +35,55 @@
           <span class="logo-text">AssetFlow</span>
         </div>
         <span class="hdr-date" id="header-date"></span>
-        <div class="hdr-right">
-          <!-- ☀️/🌙 다크/라이트 테마 토글 버튼 추가 -->
-          <button id="theme-toggle" class="icon-btn" title="테마 변경 (다크/라이트)">
-            <span id="theme-icon">🌙</span>
-          </button>
+      </div> <!-- 👈 빠져있던 hdr-left 닫는 태그를 정확히 추가했습니다! -->
 
-          <!-- 기존 Privacy Eye Toggle -->
-          <button id="privacy-toggle" class="icon-btn" title="민감 정보 숨기기 / 보이기">
-            <svg id="privacy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-          </button>
+      <!-- 2. 헤더 오른쪽 (컨트롤 버튼 모음) -->
+      <div class="hdr-right">
+        <!-- ☀️/🌙 다크/라이트 테마 토글 버튼 -->
+        <button id="theme-toggle" class="icon-btn" title="테마 변경 (다크/라이트)">
+          <span id="theme-icon">🌙</span>
+        </button>
 
-          <!-- (이 아래에 알림 벨 버튼 등 기존 요소 유지) -->
-          <!-- Export Backup -->
-          <button id="export-btn" class="icon-btn" title="백업 파일 내보내기 (JSON)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-          </button>
-          <!-- Import File -->
-          <label class="icon-btn" title="CSV / JSON 파일 불러오기">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-            <input type="file" id="import-file" accept=".csv,.json">
-          </label>
-          <!-- Rebalancing Feed Bell -->
-          <button id="feed-toggle-btn" class="icon-btn feed-bell-btn" title="리밸런싱 피드 열기">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-            <span id="alert-badge" class="badge hidden">0</span>
-          </button>
-        </div>
+        <!-- Privacy Eye Toggle -->
+        <button id="privacy-toggle" class="icon-btn" title="민감 정보 숨기기 / 보이기">
+          <svg id="privacy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </button>
+
+        <!-- Export Backup -->
+        <button id="export-btn" class="icon-btn" title="백업 파일 내보내기 (JSON)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+        </button>
+
+        <!-- Import File -->
+        <label class="icon-btn" title="CSV / JSON 파일 불러오기">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <input type="file" id="import-file" accept=".csv,.json">
+        </label>
+
+        <!-- Rebalancing Feed Bell -->
+        <button id="feed-toggle-btn" class="icon-btn feed-bell-btn" title="리밸런싱 피드 열기">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span id="alert-badge" class="badge hidden">0</span>
+        </button>
+      </div>
     </header>
 
     <!-- ============================================================
