@@ -417,8 +417,14 @@ const R = {
     const hasData = S.assets.length > 0;
     $('screen-onboarding').classList.toggle('hidden', hasData);
     $('screen-dashboard').classList.toggle('hidden', !hasData);
-    //$('export-btn').style.visibility = 'visible';
-    $('feed-toggle-btn').style.visibility = hasData ? 'visible' : 'hidden';
+
+    // 1. 내보내기 버튼은 항상 표시
+    $('export-btn').style.visibility = 'visible';
+
+    // 2. 리밸런싱/피드 버튼은 데이터가 있을 때만 표시
+    if ($('feed-toggle-btn')) {
+      $('feed-toggle-btn').style.visibility = hasData ? 'visible' : 'hidden';
+    }
 
     $('header-date').textContent = new Date().toLocaleDateString('ko-KR', {
       year: 'numeric', month: 'long', day: 'numeric', weekday: 'short'
