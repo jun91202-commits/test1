@@ -284,8 +284,20 @@ body.privacy-on .sensitive-value {
   border-color: var(--border-b);
 }
 
+/* [복구 코드] 1. 온보딩 화면에서도 헤더 우측 버튼 강제 표시 */
+#main-header .hdr-right {
+  display: flex !important;
+}
+
+#main-header .hdr-right .icon-btn,
+#export-btn {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 /* ============================================================ */
-/* [복구 코드] 아이콘(SVG) 크기 및 노출 강제 보정 코드 추가 */
+/* [복구 코드] 2. 아이콘(SVG) 크기 및 노출 강제 보정 코드 추가 */
 /* ============================================================ */
 .icon-btn svg,
 #export-btn svg {
