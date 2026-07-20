@@ -284,6 +284,20 @@ body.privacy-on .sensitive-value {
   border-color: var(--border-b);
 }
 
+/* ============================================================ */
+/* [복구 코드] 아이콘(SVG) 크기 및 노출 강제 보정 코드 추가 */
+/* ============================================================ */
+.icon-btn svg,
+#export-btn svg {
+  width: 18px !important;
+  height: 18px !important;
+  display: block !important;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  flex-shrink: 0;
+}
+
 .icon-btn.active-privacy {
   color: var(--blue);
   border-color: rgba(56, 189, 248, 0.35);
