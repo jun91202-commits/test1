@@ -417,7 +417,7 @@ const R = {
     const hasData = S.assets.length > 0;
     $('screen-onboarding').classList.toggle('hidden', hasData);
     $('screen-dashboard').classList.toggle('hidden', !hasData);
-    $('export-btn').style.visibility = 'visible';
+    //$('export-btn').style.visibility = 'visible';
     $('feed-toggle-btn').style.visibility = hasData ? 'visible' : 'hidden';
 
     $('header-date').textContent = new Date().toLocaleDateString('ko-KR', {
