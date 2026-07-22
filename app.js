@@ -921,17 +921,18 @@ const E = {
 
   /* ── Reset Data ── */
   _reset() {
-    const btn = $('reset-btn');
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-      if (confirm('모든 데이터를 초기화하고 첫 화면으로 돌아가시겠습니까?')) {
-        S.assets = [];
-        S.history = {};
-        S.errors = [];
-        S.dismissedErrors.clear();
-        Storage.clear();
-        R.init();
-      }
+    const btns = document.querySelectorAll('#reset-btn');
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (confirm('모든 데이터를 초기화하고 첫 화면으로 돌아가시겠습니까?')) {
+          S.assets = [];
+          S.history = {};
+          S.errors = [];
+          S.dismissedErrors.clear();
+          Storage.clear();
+          R.init();
+        }
+      });
     });
   },
 
