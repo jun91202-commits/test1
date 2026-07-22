@@ -18,6 +18,21 @@ const CONFIG = {
   VERSION: '1.0.0'
 };
 
+const SUPABASE_CONFIG = {
+  URL: 'https://baecfztzvfgrwupxaaqu.supabase.co',
+  KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhZWNmenR6dmZncnd1cHhhYXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3MTMyNTEsImV4cCI6MjEwMDI4OTI1MX0.16nj9PIRWuMh7DxtHbtMa6ZxvGpNFIv7H2j_U3R1gVI',
+  STORAGE_USER_ID: 'af_user_id'
+};
+
+let supabaseClient = null;
+try {
+  if (typeof supabase !== 'undefined' && supabase.createClient) {
+    supabaseClient = supabase.createClient(SUPABASE_CONFIG.URL, SUPABASE_CONFIG.KEY);
+  }
+} catch (e) {
+  console.error('[Supabase] Failed to initialize client:', e);
+}
+
 /* ────────────────────────────────────────────
    STATE — single source of truth
    ──────────────────────────────────────────── */
@@ -74,13 +89,124 @@ const month = () => new Date().toISOString().slice(0, 7);
    Partial update (patchAsset) avoids full re-serialization cost.
    ──────────────────────────────────────────── */
 const Storage = {
+  ensureClient() {
+    if (!supabaseClient && typeof supabase !== 'undefined' && supabase.createClient) {
+      try {
+        supabaseClient = supabase.createClient(SUPABASE_CONFIG.URL, SUPABASE_CONFIG.KEY);
+      } catch (e) {
+        console.error('[Supabase] Lazy initialization failed:', e);
+      }
+    }
+  },
+
+  getUserId() {
+    let id = localStorage.getItem(SUPABASE_CONFIG.STORAGE_USER_ID);
+    if (!id) {
+      id = 'usr_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem(SUPABASE_CONFIG.STORAGE_USER_ID, id);
+    }
+    return id;
+  },
+
+  updateSyncStatus(status, text) {
+    const el = document.getElementById('sync-status');
+    const txtEl = document.getElementById('sync-text');
+    const iconEl = document.getElementById('sync-icon');
+    if (!el || !txtEl) return;
+
+    el.className = 'sync-status';
+    if (status === 'loading') {
+      el.classList.add('loading');
+      txtEl.textContent = text || '동기화 중...';
+      if (iconEl) iconEl.textContent = '🔄';
+    } else if (status === 'success') {
+      el.classList.add('success');
+      txtEl.textContent = text || '동기화 완료';
+      if (iconEl) iconEl.textContent = '☁️';
+    } else if (status === 'error') {
+      el.classList.add('error');
+      txtEl.textContent = text || '동기화 실패';
+      if (iconEl) iconEl.textContent = '⚠️';
+    } else {
+      txtEl.textContent = text || '연결됨';
+      if (iconEl) iconEl.textContent = '☁️';
+    }
+  },
+
+  async syncToSupabase() {
+    this.ensureClient();
+    if (!supabaseClient) {
+      this.updateSyncStatus('error', 'Supabase 미연결');
+      return;
+    }
+    const userId = this.getUserId();
+    this.updateSyncStatus('loading', '저장 중...');
+    try {
+      const { error } = await supabaseClient
+        .from('assetflow_data')
+        .upsert({
+          id: userId,
+          assets: S.assets,
+          history: S.history,
+          updated_at: new Date().toISOString()
+        });
+      if (error) throw error;
+      this.updateSyncStatus('success', '클라우드 저장됨');
+    } catch (e) {
+      console.error('[Supabase] Sync failed:', e);
+      this.updateSyncStatus('error', '저장 실패');
+    }
+  },
+
+  async loadFromSupabase() {
+    this.ensureClient();
+    if (!supabaseClient) {
+      this.updateSyncStatus('error', 'Supabase 미연결');
+      return;
+    }
+    const userId = this.getUserId();
+    this.updateSyncStatus('loading', '불러오는 중...');
+    try {
+      const { data, error } = await supabaseClient
+        .from('assetflow_data')
+        .select('assets, history')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data) {
+        if (Array.isArray(data.assets)) S.assets = data.assets;
+        if (data.history) S.history = data.history;
+
+        // Cache to local storage
+        localStorage.setItem(CONFIG.STORAGE_ASSETS, JSON.stringify(S.assets));
+        localStorage.setItem(CONFIG.STORAGE_HISTORY, JSON.stringify(S.history));
+
+        // Refresh views
+        R.init();
+        this.updateSyncStatus('success', '동기화 완료');
+      } else {
+        // No remote data yet, perform initial sync of local data to remote
+        await this.syncToSupabase();
+      }
+    } catch (e) {
+      console.error('[Supabase] Load failed:', e);
+      this.updateSyncStatus('error', '불러오기 실패');
+    }
+  },
+
   load() {
+    // 1. Load from local cache immediately for fast render
     try {
       const a = localStorage.getItem(CONFIG.STORAGE_ASSETS);
       const h = localStorage.getItem(CONFIG.STORAGE_HISTORY);
       if (a) S.assets = JSON.parse(a);
       if (h) S.history = JSON.parse(h);
-    } catch (e) { console.warn('[Storage] load failed:', e); }
+    } catch (e) { console.warn('[Storage] load cache failed:', e); }
+
+    // 2. Asynchronously load/sync from Supabase
+    this.loadFromSupabase();
   },
 
   saveAll() {
@@ -88,10 +214,9 @@ const Storage = {
       localStorage.setItem(CONFIG.STORAGE_ASSETS, JSON.stringify(S.assets));
       localStorage.setItem(CONFIG.STORAGE_HISTORY, JSON.stringify(S.history));
     } catch (e) { console.warn('[Storage] saveAll failed:', e); }
+    this.syncToSupabase();
   },
 
-  /** Partial update — only touches a single asset's changed fields in localStorage.
-   *  State (S.assets) must be updated before calling this. */
   patchAsset(id, diff) {
     const idx = S.assets.findIndex(a => a.id === id);
     if (idx === -1) return;
@@ -99,11 +224,27 @@ const Storage = {
     try {
       localStorage.setItem(CONFIG.STORAGE_ASSETS, JSON.stringify(S.assets));
     } catch (e) { console.warn('[Storage] patch failed:', e); }
+    this.syncToSupabase();
   },
 
-  clear() {
+  async clear() {
     localStorage.removeItem(CONFIG.STORAGE_ASSETS);
     localStorage.removeItem(CONFIG.STORAGE_HISTORY);
+    if (supabaseClient) {
+      const userId = this.getUserId();
+      this.updateSyncStatus('loading', '초기화 중...');
+      try {
+        const { error } = await supabaseClient
+          .from('assetflow_data')
+          .delete()
+          .eq('id', userId);
+        if (error) throw error;
+        this.updateSyncStatus('success', '초기화됨');
+      } catch (e) {
+        console.error('[Supabase] Delete failed:', e);
+        this.updateSyncStatus('error', '초기화 실패');
+      }
+    }
   }
 };
 

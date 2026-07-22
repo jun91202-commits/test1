@@ -261,6 +261,44 @@ body.privacy-on .sensitive-value {
   font-size: 0.75rem;
 }
 
+/* ── Cloud Sync Status ── */
+.sync-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.75rem;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--bg-card);
+  color: var(--t2);
+  font-size: 0.75rem;
+  transition: all var(--t-quick);
+  user-select: none;
+}
+
+.sync-status.loading {
+  color: var(--orange);
+  border-color: rgba(251, 146, 60, 0.35);
+  background: rgba(251, 146, 60, 0.07);
+}
+
+.sync-status.success {
+  color: var(--green);
+  border-color: rgba(74, 222, 128, 0.35);
+  background: rgba(74, 222, 128, 0.07);
+}
+
+.sync-status.error {
+  color: var(--red);
+  border-color: rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.07);
+}
+
+.sync-text {
+  font-weight: 500;
+}
+
 /* ── Icon Button ── */
 .icon-btn {
   position: relative;

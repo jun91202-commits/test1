@@ -39,6 +39,12 @@
 
       <!-- 2. 헤더 오른쪽 (컨트롤 버튼 모음) -->
       <div class="hdr-right">
+        <!-- Cloud Sync Status Indicator -->
+        <div id="sync-status" class="sync-status" title="클라우드 동기화 상태">
+          <span id="sync-icon">☁️</span>
+          <span id="sync-text" class="sync-text">연결 중...</span>
+        </div>
+
         <!-- ☀️/🌙 다크/라이트 테마 토글 버튼 -->
         <button id="theme-toggle" class="icon-btn" title="테마 변경 (다크/라이트)">
           <span id="theme-icon">🌙</span>
@@ -304,6 +310,7 @@
   </div><!-- /#app -->
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
 </body>
 
