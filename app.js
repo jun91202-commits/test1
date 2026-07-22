@@ -558,6 +558,10 @@ const R = {
     const hasData = S.assets.length > 0;
     $('screen-onboarding').classList.toggle('hidden', hasData);
     $('screen-dashboard').classList.toggle('hidden', !hasData);
+    // Inline style guarantees the hide takes effect even though #screen-dashboard's
+    // ID rule (display:flex) outranks the .screen.hidden class rule in specificity.
+    $('screen-onboarding').style.display = hasData ? 'none' : '';
+    $('screen-dashboard').style.display = hasData ? '' : 'none';
 
     // 1. 내보내기 버튼은 항상 표시
     $('export-btn').style.visibility = 'visible';
