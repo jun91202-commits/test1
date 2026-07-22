@@ -835,6 +835,7 @@ const E = {
     this._headerImport();
     this._privacy();
     this._export();
+    this._reset();
     this._feed();
     this._chartToggle();
     this._filterChips();
@@ -916,6 +917,22 @@ const E = {
   /* ── Export ── */
   _export() {
     $('export-btn').addEventListener('click', exportBackup);
+  },
+
+  /* ── Reset Data ── */
+  _reset() {
+    const btn = $('reset-btn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      if (confirm('모든 데이터를 초기화하고 첫 화면으로 돌아가시겠습니까?')) {
+        S.assets = [];
+        S.history = {};
+        S.errors = [];
+        S.dismissedErrors.clear();
+        Storage.clear();
+        R.init();
+      }
+    });
   },
 
   /* ── Feed Panel ── */

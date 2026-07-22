@@ -322,6 +322,12 @@ body.privacy-on .sensitive-value {
   border-color: var(--border-b);
 }
 
+#reset-btn:hover {
+  color: var(--red);
+  border-color: rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.07);
+}
+
 /* [복구 코드] 1. 온보딩 화면에서도 헤더 우측 버튼 강제 표시 */
 #main-header .hdr-right {
   display: flex !important;
