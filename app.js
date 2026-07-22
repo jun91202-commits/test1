@@ -571,7 +571,36 @@ const R = {
       year: 'numeric', month: 'long', day: 'numeric', weekday: 'short'
     });
 
-    if (hasData) this.dashboard();
+    if (hasData) {
+      this.dashboard();
+    } else {
+      this.resetDashboardView();
+    }
+  },
+
+  /** Clear stale dashboard UI so nothing lingers when returning to onboarding */
+  resetDashboardView() {
+    if (S.donutChart) { S.donutChart.destroy(); S.donutChart = null; }
+    if (S.histChart) { S.histChart.destroy(); S.histChart = null; }
+
+    $('val-total').textContent = '-';
+    $('sub-total').textContent = '';
+    $('val-networth').textContent = '-';
+    $('sub-networth').textContent = '';
+    $('val-debt').textContent = '-';
+    $('sub-debt').textContent = '';
+    $('donut-legend').innerHTML = '';
+    $('table-body').innerHTML = '';
+    $('feed-content').innerHTML = '';
+
+    const badge = $('alert-badge');
+    if (badge) { badge.textContent = '0'; badge.classList.add('hidden'); }
+
+    $('btn-chart-area').classList.add('active');
+    $('btn-chart-bar').classList.remove('active');
+
+    document.querySelectorAll('#filter-chips .chip').forEach(c =>
+      c.classList.toggle('active', c.dataset.filter === 'all'));
   },
 
   dashboard() {
@@ -925,10 +954,18 @@ const E = {
     btns.forEach(btn => {
       btn.addEventListener('click', () => {
         if (confirm('모든 데이터를 초기화하고 첫 화면으로 돌아가시겠습니까?')) {
+          this._closeFeed();
+
           S.assets = [];
           S.history = {};
           S.errors = [];
-          S.dismissedErrors.clear();
+          S.dismissedErrors = new Set();
+          S.filter = 'all';
+          S.sortCol = null;
+          S.sortDir = 'asc';
+          S.chartMode = 'area';
+          S.feedTab = 'macro';
+
           Storage.clear();
           R.init();
         }
